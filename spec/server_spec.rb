@@ -12,6 +12,7 @@ describe "Jasmine.app" do
     config.stub!(:src_dir).and_return(File.join(@root, "fixture", "src"))
     config.stub!(:src_files).and_return(["file1.js"])
     config.stub!(:spec_files).and_return(["file2.js"])
+    config.stub!(:additional_runner_markup).and_return("<!-- imagine a configuration script -->")
     Jasmine.app(config)
   end
 
@@ -69,6 +70,12 @@ describe "Jasmine.app" do
       last_response.body.should include("\"/file1.js")
       last_response.body.should include("\"/__spec__/file2.js")
       last_response.body.should satisfy {|s| s.index("/file1.js") < s.index("/__spec__/file2.js") }
+    end
+
+    it "should include any additional runner markup before source files" do
+      get "/"
+      last_response.body.should include("<!-- imagine a configuration script -->")
+      last_response.body.should satisfy {|s| s.index("imagine a configuration script") < s.index("/file1.js") }
     end
 
     it "should return an empty 200 for HEAD requests to /" do

@@ -95,6 +95,11 @@ module Jasmine
       src_files.collect {|f| "/" + f } + helpers.collect {|f| File.join(spec_path, f) } + spec_files_to_include.collect {|f| File.join(spec_path, f) }
     end
 
+    def additional_runner_markup
+      return simple_config['additional_runner_markup'] if simple_config['additional_runner_markup']
+      ""
+    end
+
     def css_files
       stylesheets.collect {|f| "/" + f }
     end

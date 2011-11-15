@@ -30,6 +30,12 @@ describe Jasmine::Config do
         @config.src_dir.should == 'some_project_root'
       end
 
+      it "uses an empty string when no additional runner markup is specified" do
+        @config.stub!(:simple_config_file).and_return(File.join(@template_dir, 'spec/javascripts/support/jasmine.yml'))
+        YAML.stub!(:load).and_return({})
+        @config.additional_runner_markup.should == ''
+      end
+
       it "should use correct default yaml config" do
         @config.stub!(:project_root).and_return('some_project_root')
         @config.simple_config_file.should == (File.join('some_project_root', 'spec/javascripts/support/jasmine.yml'))
@@ -193,6 +199,14 @@ describe Jasmine::Config do
         Dir.stub!(:glob).and_return { |glob_string| [glob_string] }
 
         @config.stylesheets.should == ['foo.css', 'bar.css']
+      end
+      it "respects additional runner markup from config" do
+        @config.stub!(:simple_config_file).and_return(File.join(@template_dir, 'spec/javascripts/support/jasmine.yml'))
+
+        YAML.stub!(:load).and_return({'additional_runner_markup' => "<script>window.enableCoverage()</script>"})
+        Dir.stub!(:glob).and_return { |glob_string| [glob_string] }
+
+        @config.additional_runner_markup.should == '<script>window.enableCoverage()</script>'
       end
 
       it "using rails jasmine.yml" do

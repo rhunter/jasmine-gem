@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<%= css_file %>" type="text/css" media="screen"/>
   <% end %>
 
+  <%= additional_runner_markup %>
   <% jasmine_files.each do |jasmine_file| %>
   <script src="<%= jasmine_file %>" type="text/javascript"></script>
   <% end %>
